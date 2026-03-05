@@ -70,7 +70,7 @@ class COMPONENT_PROPERTIES:
         return gamma
 
     def get_psat(self, T):
-        # Todo
+        # Todo: use model to calculate saturation pressure for pure component.
         return self.psat
 
     def calc_Q(self, water_wt_frac, T):
@@ -83,7 +83,7 @@ class COMPONENT_PROPERTIES:
         y = (self.initial_mass - self.pw * system_data.mass_flow) / (system_data.initial_mol_flow - system_data.mole_flow)
 
     def calc_Sc(self):
-        return self.mu / (self.rho)
+        return self.mu / (self.rho * self.D)
 
     def calc_Sh(self, system_data):
         return system_data.an[0] * system_data.Re ** system_data.an[1] * self.Sc ** system_data.an[2] * (system_data.dh / system_data.l) ** system_data.an[3]
@@ -93,12 +93,13 @@ class COMPONENT_PROPERTIES:
 
 
 class SYSTEM_PROPERTIES:
-    def __init__(self, membrane_width, membrane_height, mass_flow, mass_fractions, rho_i, an, l, permeate_pressure, GE, T, P, rmm_i):
+    def __init__(self, membrane_width, membrane_height, mass_flow, mass_fractions, rho_i, an, l, permeate_pressure, GE, T, P, rmm_i, length):
         # Membrane measurements.
         self.membrane_width = membrane_width
         self.membrane_height = membrane_height
         self.l = l
         self.dh = self.calc_dh()
+        self.length = length
 
         # Stream temperature and pressure.
         self.temp = T
@@ -140,7 +141,7 @@ class SYSTEM_PROPERTIES:
 
     def update(self, new_mass_fractions, new_mass_flow, new_T, new_P):
         # Update mass flows and fractions.
-        self.mass_flow = new_mass_flow
+        #self.mass_flow = new_mass_flow
         self.mass_fractions = new_mass_fractions
         self.water_wt = new_mass_fractions[0]
 
@@ -244,7 +245,8 @@ def parse_templates():
                                     GE = GE,
                                     T = sys_prop[5],
                                     P = sys_prop[6],
-                                    rmm_i = rmms)
+                                    rmm_i = rmms,
+                                    length = sys_prop[11])
 
     # Create an array of components, stored as class objects.
     i=0
