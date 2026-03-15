@@ -11,3 +11,5 @@ The utility files contain class objects for calculating thermodynamic and stream
 It is very basic, and it served its purpose well.
 
 One caveat, the visocsity of the stream wasn't calculated and was left blank. You can add the Erlying method if you wish to do so.
+
+For further information, send me an email at benj.alexander.cox@proton.me
